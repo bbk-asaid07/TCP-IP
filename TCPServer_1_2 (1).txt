@@ -1,0 +1,29 @@
+from socket import *  # for socket programming
+
+serverPort = 5000  # the selected sever port number
+
+# create the server's socket (AF_INET: use IPv4, SOCK_STREAM: use TCP)
+serverSocket = socket(AF_INET, SOCK_STREAM)
+
+serverSocket.bind(("localhost", serverPort))  # bind 50000 to server's socket
+
+# server is ready
+serverSocket.listen(1)
+print("The server is ready to receive")
+S1=""
+S2=""
+approval="approved"
+while True:
+    # accept the TCP connection
+    connectionSocket, clientAaddress = serverSocket.accept()
+    # receive the message from client, the server's buffer size is 2048
+    S1 = connectionSocket.recv(2048).decode()
+    connectionSocket.send(approval.encode())
+    S2 = connectionSocket.recv(2048).decode()
+    ans=S2+S1
+
+    # sned the converted message to client
+    connectionSocket.send(ans.encode())
+
+    # close and release the connection socket
+    connectionSocket.close()

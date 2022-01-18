@@ -1,0 +1,35 @@
+from socket import *  # for socket programming
+
+serverName = "127.0.0.1"  # either and IP address or a hostname
+serverPort = 5000  # the selected sever port number
+
+# create the client's socket (AF_INET: use IPv4, SOCK_STREAM : TCP
+clientSocket = socket(AF_INET, SOCK_STREAM)
+input = input("please enter a string: ")
+S1 = ""
+S2 = ""
+length = len(input)
+print(length)
+if length % 2 == 0:
+    S1 = input[0:int(length/2)]
+    S2 = input[int(length/2):length]
+if length % 2 == 1:
+    S1 = input[0:int((length/2)+1)]
+    S2 = input[int((length/2)+1):length]
+test=S2+S1
+
+# establish a TCP connection
+clientSocket.connect((serverName, serverPort))
+
+# send the message through the socket to server
+clientSocket.send(S1.encode())
+approval = clientSocket.recv(2048)
+clientSocket.send(S2.encode())
+
+# receive the modified message from sever, the client's buffer size is 2048
+ans = clientSocket.recv(2048).decode()
+
+# display the received messages from the server
+if(ans==test):
+    print("Server response is same as S2S1 which is '"+ans+"'")
+clientSocket.close()  # close and release the socket
